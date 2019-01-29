@@ -1,7 +1,16 @@
 #!/bin/sh
 set -e
 
-cat /github/workflow/event.json
+# See what kind of action this is
+ACTION=$(cat /github/workflow/event.json | jq -r .action)
+case $ACTION in
+	opened)
+		exit 0
+		;;
+	synchronize)
+		exit 0
+		;;
+esac
 
 cd "${GO_WORKING_DIR:-.}"
 
