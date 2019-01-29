@@ -5,9 +5,10 @@ set -e
 ACTION=$(cat /github/workflow/event.json | jq -r .action)
 case $ACTION in
 	opened)
-		exit 0
 		;;
 	synchronize)
+		;;
+	*)
 		exit 0
 		;;
 esac
