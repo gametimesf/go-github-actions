@@ -9,6 +9,7 @@ case $ACTION in
 	synchronize)
 		;;
 	*)
+		echo "Not a PR open or push, exiting"
 		exit 0
 		;;
 esac
