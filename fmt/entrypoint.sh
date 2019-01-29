@@ -1,6 +1,19 @@
 #!/bin/sh
 set -e
 
+# See what kind of action this is
+ACTION=$(cat /github/workflow/event.json | jq -r .action)
+case $ACTION in
+	opened)
+		;;
+	synchronize)
+		;;
+	*)
+		echo "Not a PR open or push, exiting"
+		exit 0
+		;;
+esac
+
 cd "${GO_WORKING_DIR:-.}"
 
 # Check if any files are not formatted.
