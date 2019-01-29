@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+cat /github/workflow/event.json
+
 cd "${GO_WORKING_DIR:-.}"
 
 # Check if any files are not formatted.
