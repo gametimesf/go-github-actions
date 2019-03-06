@@ -18,7 +18,7 @@ cd "${GO_WORKING_DIR:-.}"
 
 # Run tests
 set +e
-OUTPUT=$(go test -race -cover $(go list ./...))
+OUTPUT=$(go test -race -cover $(go list ./...) 2>&1)
 SUCCESS=$?
 set -e
 
