@@ -26,8 +26,13 @@ cd "${WORKDIR}"
 
 # Run tests
 set +e
-OUTPUT=$(go test -race -cover $(go list ./...) 2>&1)
-SUCCESS=$?
+if [ -r Makefile ]; then
+	OUTPUT=$(make test 2>&1)
+	SUCCESS=$?
+else
+	OUTPUT=$(go test -race -cover $(go list ./...) 2>&1)
+	SUCCESS=$?
+fi
 echo "$OUTPUT"
 set -e
 
