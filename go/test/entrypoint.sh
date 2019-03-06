@@ -14,6 +14,17 @@ case $ACTION in
 		;;
 esac
 
+post() {
+	OUTPUT="$1"
+	# Post results back as comment.
+	COMMENT="#### \`go test\`
+$OUTPUT
+"
+	PAYLOAD=$(echo '{}' | jq --arg body "$COMMENT" '.body = $body')
+	COMMENTS_URL=$(cat /github/workflow/event.json | jq -r .pull_request.comments_url)
+	curl -s -S -H "Authorization: token $GITHUB_TOKEN" --header "Content-Type: application/json" --data "$PAYLOAD" "$COMMENTS_URL" > /dev/null
+}
+
 # Set up GOPATH
 if [ -z "${IMPORT}" ]; then
   IMPORT="${GITHUB_REPOSITORY}"
@@ -23,6 +34,24 @@ WORKDIR="${GOPATH}/src/github.com/${IMPORT}"
 mkdir -p "$(dirname "${WORKDIR}")"
 ln -s "${PWD}" "${WORKDIR}"
 cd "${WORKDIR}"
+
+# Ensure dependencies exist
+set +e
+if [ -r Gopkg.lock ]; then
+	OUTPUT=$(dep ensure)
+	SUCCESS=$?
+fi
+if [ -r go.mod ]; then
+	OUTPUT=$(go mod download)
+	SUCCESS=$?
+fi
+set -e
+
+echo "$OUTPUT"
+if [ $SUCCESS -ne 0 ]; then
+	post "$OUTPUT"
+	exit $SUCCESS
+fi
 
 # Run tests
 set +e
@@ -41,12 +70,6 @@ if [ $SUCCESS -eq 0 ]; then
   exit 0
 fi
 
-# Post results back as comment.
-COMMENT="#### \`go test\`
-$OUTPUT
-"
-PAYLOAD=$(echo '{}' | jq --arg body "$COMMENT" '.body = $body')
-COMMENTS_URL=$(cat /github/workflow/event.json | jq -r .pull_request.comments_url)
-curl -s -S -H "Authorization: token $GITHUB_TOKEN" --header "Content-Type: application/json" --data "$PAYLOAD" "$COMMENTS_URL" > /dev/null
+post "$OUTPUT"
 
-exit $SUCCESS
+exit 0
