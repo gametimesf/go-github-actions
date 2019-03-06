@@ -40,11 +40,11 @@ git config --global url."https://${GITHUB_TOKEN}@github.com/gametimesf".insteadO
 # Ensure dependencies exist
 set +e
 if [ -r Gopkg.lock ]; then
-	OUTPUT=$(dep ensure)
+	OUTPUT=$(dep ensure 2>&1)
 	SUCCESS=$?
 fi
 if [ -r go.mod ]; then
-	OUTPUT=$(go mod download)
+	OUTPUT=$(go mod download 2>&1)
 	SUCCESS=$?
 fi
 set -e
