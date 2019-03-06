@@ -35,6 +35,8 @@ mkdir -p "$(dirname "${WORKDIR}")"
 ln -s "${PWD}" "${WORKDIR}"
 cd "${WORKDIR}"
 
+git config --global url."https://${GITHUB_TOKEN}@github.com/gametimesf".insteadOf "https://github.com/gametimesf"
+
 # Ensure dependencies exist
 set +e
 if [ -r Gopkg.lock ]; then
