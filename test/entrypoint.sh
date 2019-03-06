@@ -14,12 +14,21 @@ case $ACTION in
 		;;
 esac
 
-cd "${GO_WORKING_DIR:-.}"
+# Set up GOPATH
+if [ -z "${IMPORT}" ]; then
+  IMPORT="${GITHUB_REPOSITORY}"
+fi
+WORKDIR="${GOPATH}/src/github.com/${IMPORT}"
+
+mkdir -p "$(dirname "${WORKDIR}")"
+ln -s "${PWD}" "${WORKDIR}"
+cd "${WORKDIR}"
 
 # Run tests
 set +e
 OUTPUT=$(go test -race -cover $(go list ./...) 2>&1)
 SUCCESS=$?
+echo "$OUTPUT"
 set -e
 
 # Exit if `go test` passes.
