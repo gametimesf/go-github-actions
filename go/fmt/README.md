@@ -4,7 +4,7 @@ Runs `gofmt`. To learn more about `gofmt`, see the [official docs](https://golan
 
 ```hcl
 action "gofmt" {
-  uses    = "sjkaliski/go-github-actions/fmt@v0.1.0"
+  uses    = "gametimesf/github-actions/go/fmt@v0.3.0"
   needs   = "previous-action"
   secrets = ["GITHUB_TOKEN"]
 

@@ -5,9 +5,9 @@ LABEL "com.github.actions.description"="Run go fmt"
 LABEL "com.github.actions.icon"="terminal"
 LABEL "com.github.actions.color"="blue"
 
-LABEL "repository"="https://github.com/sjkaliski/go-github-actions"
-LABEL "homepage"="https://github.com/sjkaliski/go-github-actions"
-LABEL "maintainer"="Steve Kaliski <sjkaliski@gmail.com>"
+LABEL "repository"="https://github.com/gametimesf/github-actions"
+LABEL "homepage"="https://github.com/gametimesf/github-actions"
+LABEL "maintainer"="Andy Janata <andy.janata@gametime.co>"
 
 RUN apt-get update
 RUN apt-get install -y jq
