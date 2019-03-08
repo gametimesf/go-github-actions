@@ -38,7 +38,7 @@ cd "${WORKDIR}"
 git config --global url."https://${ORG_GITHUB_TOKEN}@github.com/gametimesf".insteadOf "https://github.com/gametimesf"
 
 # Ensure dependencies exist
-set +e
+set +ex
 if [ -r Gopkg.lock ]; then
 	OUTPUT=$(dep ensure 2>&1)
 	SUCCESS=$?
@@ -47,7 +47,7 @@ if [ -r go.mod ]; then
 	OUTPUT=$(go mod download 2>&1)
 	SUCCESS=$?
 fi
-set -e
+set -ex
 
 echo "$OUTPUT"
 if [ $SUCCESS -ne 0 ]; then
@@ -56,7 +56,7 @@ if [ $SUCCESS -ne 0 ]; then
 fi
 
 # Run tests
-set +e
+set +ex
 if [ -r Makefile ]; then
 	OUTPUT=$(make test 2>&1)
 	SUCCESS=$?
@@ -64,8 +64,9 @@ else
 	OUTPUT=$(go test -race -cover $(go list ./...) 2>&1)
 	SUCCESS=$?
 fi
+set -ex
+
 echo "$OUTPUT"
-set -e
 
 # Exit if `go test` passes.
 if [ $SUCCESS -eq 0 ]; then
@@ -74,4 +75,4 @@ fi
 
 post "$OUTPUT"
 
-exit 0
+exit $SUCCESS
