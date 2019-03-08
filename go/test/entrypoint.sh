@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+set -ex
 
 # See what kind of action this is
 ACTION=$(cat /github/workflow/event.json | jq -r .action)
@@ -35,10 +35,12 @@ mkdir -p "$(dirname "${WORKDIR}")"
 ln -s "${PWD}" "${WORKDIR}"
 cd "${WORKDIR}"
 
+set +x
 git config --global url."https://${ORG_GITHUB_TOKEN}@github.com/gametimesf".insteadOf "https://github.com/gametimesf"
+set -x
 
 # Ensure dependencies exist
-set +ex
+set +e
 if [ -r Gopkg.lock ]; then
 	OUTPUT=$(dep ensure 2>&1)
 	SUCCESS=$?
@@ -47,7 +49,7 @@ if [ -r go.mod ]; then
 	OUTPUT=$(go mod download 2>&1)
 	SUCCESS=$?
 fi
-set -ex
+set -e
 
 echo "$OUTPUT"
 if [ $SUCCESS -ne 0 ]; then
@@ -56,7 +58,7 @@ if [ $SUCCESS -ne 0 ]; then
 fi
 
 # Run tests
-set +ex
+set +e
 if [ -r Makefile ]; then
 	OUTPUT=$(make test 2>&1)
 	SUCCESS=$?
@@ -64,7 +66,7 @@ else
 	OUTPUT=$(go test -race -cover $(go list ./...) 2>&1)
 	SUCCESS=$?
 fi
-set -ex
+set -e
 
 echo "$OUTPUT"
 
