@@ -14,6 +14,8 @@ case $ACTION in
 		;;
 esac
 
+curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
 post() {
 	OUTPUT="$1"
 	# Post results back as comment.
