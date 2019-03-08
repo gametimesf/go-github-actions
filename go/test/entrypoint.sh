@@ -1,5 +1,5 @@
 #!/bin/sh
-set -ex
+set -e
 
 # See what kind of action this is
 ACTION=$(cat /github/workflow/event.json | jq -r .action)
@@ -13,8 +13,6 @@ case $ACTION in
 		exit 0
 		;;
 esac
-
-curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
 post() {
 	OUTPUT="$1"
@@ -37,9 +35,7 @@ mkdir -p "$(dirname "${WORKDIR}")"
 ln -s "${PWD}" "${WORKDIR}"
 cd "${WORKDIR}"
 
-set +x
 git config --global url."https://${ORG_GITHUB_TOKEN}@github.com/gametimesf".insteadOf "https://github.com/gametimesf"
-set -x
 
 # Ensure dependencies exist
 set +e

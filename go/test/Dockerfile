@@ -12,7 +12,7 @@ LABEL "maintainer"="Andy Janata <andy.janata@gametime.co>"
 RUN apt-get update
 RUN apt-get install -y jq
 
-# RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
 ADD entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
