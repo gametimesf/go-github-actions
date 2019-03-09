@@ -18,7 +18,7 @@ cd "${GO_WORKING_DIR:-.}"
 
 # Check if any files are not formatted.
 set +e
-test -z "$(gofmt -l -d -e $(find . -type f -iname '*.go'))"
+test -z "$(gofmt -l -d -e $(find . -path ./vendor -prune -o -type f -iname '*.go' -print))"
 SUCCESS=$?
 set -e
 
